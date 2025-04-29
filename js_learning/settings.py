@@ -21,14 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5j)a8mm8gk3rv*k6d3-7yms$)5em9x2$$logfzni^j9yhfn6ug'
+SECRET_KEY = 'vanya232323'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+AUTH_USER_MODEL = 'users.User'
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,8 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'users.apps.UsersConfig',  # Оставляем только эту запись для users
+    'courses.apps.CoursesConfig',  # И эту для courses (удалите дубль ниже)
     'django.contrib.staticfiles',
-    'courses',
+    # УДАЛИТЬ СТРОКУ: 'courses',  # Это дубликат
 ]
 
 MIDDLEWARE = [
@@ -123,8 +125,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'courses.CustomUser'
-
 LOGIN_REDIRECT_URL = 'home'  # Куда перенаправлять после входа
 
 LOGOUT_REDIRECT_URL = 'home'  # Куда перенаправлять после выхода
@@ -139,3 +139,5 @@ MAX_TEST_ATTEMPTS = 3
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'your_app/static')]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_URL = '/media/'  # URL для медиафайлов
+MEDIA_ROOT = BASE_DIR / 'media'  # Папка для загруженных файлов

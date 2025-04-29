@@ -1,25 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.utils import timezone
-
-class CustomUser(AbstractUser):
-    is_student = models.BooleanField(default=False)
-    is_teacher = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
-
-    def save(self, *args, **kwargs):
-        if self.is_superuser:  # Админы автоматически получают все права
-            self.is_admin = True
-        super().save(*args, **kwargs)
-
-    class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-    
+from django.contrib.auth import get_user_model
 User = get_user_model()
-
+    
 class Course(models.Model):
     title = models.CharField("Название", max_length=200)
     description = models.TextField("Описание")
@@ -38,7 +23,7 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
-    
+
 class Lesson(models.Model):
     course = models.ForeignKey(
         Course,

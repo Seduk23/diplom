@@ -1,10 +1,15 @@
 from django.contrib import admin
 from .models import Course, Lesson, TestResult
-
+from django.contrib.auth import get_user_model
 class LessonInline(admin.TabularInline):
     model = Lesson
     extra = 1
 
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'email', 'is_staff', 'is_superuser', 'is_admin')
+   
+
+User = get_user_model()
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('title', 'creator', 'lesson_count', 'student_count', 'is_active')

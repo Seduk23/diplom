@@ -1,11 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+from django.contrib.auth import get_user_model
 from .models import Course, Lesson
 
+User = get_user_model()
 class StudentSignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        model = CustomUser
+        model = User
         fields = ('username', 'email', 'password1', 'password2')
 
     def save(self, commit=True):
@@ -17,7 +18,7 @@ class StudentSignUpForm(UserCreationForm):
 
 class TeacherSignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        model = CustomUser
+        model = User
         fields = ('username', 'email', 'password1', 'password2')
 
     def save(self, commit=True):

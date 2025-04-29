@@ -1,6 +1,9 @@
 import os
 import django
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 # Указываем Django, какие настройки использовать
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'js_learning.settings')
 django.setup()
@@ -15,10 +18,13 @@ def set_defaults():
     admin = User.objects.filter(is_superuser=True).first()
     if not admin:
         admin = User.objects.create_superuser(
-            username='admin',
-            email='admin@example.com',
-            password='adminpass'
-        )
+        username='admin',
+        password='admin123',
+        is_staff=True,
+        is_superuser=True
+    )
+    admin.is_admin = True  # Добавляем наш флаг
+    admin.save()
     
     # Устанавливаем создателя и дату для всех курсов
     for course in Course.objects.all():

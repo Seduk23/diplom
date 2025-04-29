@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Course, Lesson, Question, TestResult, User
+from .models import Course, Lesson, Question, TestResult
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .forms import LessonForm, StudentSignUpForm, TeacherSignUpForm
@@ -9,8 +9,9 @@ from .forms import CourseForm
 from django.contrib.auth.decorators import user_passes_test
 from .forms import StudentSignUpForm, TeacherSignUpForm, CourseForm, LessonForm, TestForm
 from .decorators import teacher_required
+from django.contrib.auth import get_user_model
 
-
+User = get_user_model()
 def course_detail(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     lessons = course.lessons.all().order_by('order')
