@@ -9,9 +9,6 @@
         </a>
     </div>
     {% if user.is_teacher %}
-    <a href="{% url 'create_course' %}" class="btn btn-success">
-        Создать курс
-    </a>
 {% endif %}
     {% if courses %}
     <div class="row row-cols-1 row-cols-md-3 g-4">

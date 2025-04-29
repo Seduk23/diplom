@@ -1,18 +1,16 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}JS Learning Platform{% endblock %}</title>
-    <!-- Все стили в head -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <!-- Ваш кастомный CSS -->
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}JS Learning Platform{% endblock %}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+        <link rel="stylesheet" href="{% static 'css/roles.css' %}">
+        {% block extra_css %}{% endblock %}
+    </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
@@ -23,32 +21,39 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">  <!-- Используем <ul> для семантики -->
+                <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
-                        {% if user.is_teacher %}
+                        {% if user.is_teacher or user.is_admin %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'teacher_dashboard' %}">
-                                    <i class="bi bi-journal-bookmark"></i> Мои курсы
+                                    <i class="bi bi-journal-bookmark"></i> 
+                                    {% if user.is_teacher %}Мои курсы{% else %}Все курсы{% endif %}
                                 </a>
                             </li>
+                            {% if user.is_teacher %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'create_course' %}">
                                     <i class="bi bi-plus-circle"></i> Создать курс
                                 </a>
                             </li>
+                            {% endif %}
                         {% elif user.is_student %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'student_dashboard' %}">
                                     <i class="bi bi-journal-bookmark"></i> Мои курсы
                                 </a>
                             </li>
-                        {% elif user.is_admin %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'admin_dashboard' %}">
-                                    <i class="bi bi-shield-lock"></i> Админ-панель
-                                </a>
-                            </li>
                         {% endif %}
+                        
+                        <li class="nav-item">
+                            <span class="badge 
+                                {% if user.is_teacher %}bg-warning text-dark
+                                {% elif user.is_admin %}bg-danger
+                                {% else %}bg-info{% endif %} 
+                                ms-2 me-2">
+                                {% if user.is_teacher %}Преподаватель{% elif user.is_admin %}Админ{% else %}Студент{% endif %}
+                            </span>
+                        </li>
                         
                         <li class="nav-item">
                             <form action="{% url 'logout' %}" method="post" class="d-flex">
@@ -61,33 +66,13 @@
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'student_signup' %}">
-                                <i class="bi bi-person-plus"></i> Регистрация студента
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'teacher_signup' %}">
-                                <i class="bi bi-person-plus"></i> Регистрация преподавателя
+                                <i class="bi bi-person-plus"></i> Регистрация
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'login' %}">
                                 <i class="bi bi-box-arrow-in-right"></i> Войти
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <form action="{% url 'logout' %}" method="post" class="d-flex align-items-center">
-                                {% csrf_token %}
-                                <span class="badge 
-                                    {% if user.is_teacher %}badge-teacher
-                                    {% elif user.is_admin %}badge-admin
-                                    {% else %}badge-student{% endif %} 
-                                    badge-role ms-1 me-2">
-                                    {% if user.is_teacher %}Преподаватель{% elif user.is_admin %}Админ{% else %}Студент{% endif %}
-                                </span>
-                                <button type="submit" class="nav-link btn btn-link">
-                                    <i class="bi bi-box-arrow-right"></i> Выйти ({{ user.username }})
-                                </button>
-                            </form>
                         </li>
                     {% endif %}
                 </ul>
@@ -96,12 +81,11 @@
     </nav>
 
     <div class="container mt-4">
-        {% include 'partials/messages.html' %}  <!-- Добавьте этот partial для сообщений -->
+        {% include 'partials/messages.html' %}
         {% block content %}{% endblock %}
     </div>
 
-    <!-- Скрипты в конце body -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    {% block scripts %}{% endblock %}  <!-- Блок для дополнительных скриптов -->
+    {% block scripts %}{% endblock %}
 </body>
 </html>

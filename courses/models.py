@@ -2,9 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.utils import timezone
-from django.contrib.auth import get_user_model
-User = get_user_model()
-    
+ 
 class Course(models.Model):
     title = models.CharField("Название", max_length=200)
     description = models.TextField("Описание")
@@ -21,6 +19,11 @@ class Course(models.Model):
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"
 
+    def can_view(self, user):
+        if user.is_admin or user.is_teacher:
+            return True
+        return self.is_active and (user.is_student and self in user.courses_enrolled.all())
+    
     def __str__(self):
         return self.title
 

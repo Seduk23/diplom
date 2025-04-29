@@ -1,6 +1,9 @@
 from django.contrib import admin
 from .models import Course, Lesson, TestResult
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required, user_passes_test  # Импорт декораторов
+from django.shortcuts import render  # Импорт render
+
 class LessonInline(admin.TabularInline):
     model = Lesson
     extra = 1
@@ -38,3 +41,9 @@ class TestResultAdmin(admin.ModelAdmin):
 class LessonAdmin(admin.ModelAdmin):
     list_display = ('title', 'course')
     list_filter = ('course',)
+    
+@login_required
+@user_passes_test(lambda u: u.is_admin)
+def admin_dashboard(request):
+    courses = Course.objects.all()
+    return render(request, 'courses/admin_dashboard.html', {'courses': courses})

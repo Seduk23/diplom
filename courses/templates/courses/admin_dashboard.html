@@ -2,28 +2,30 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Административная панель</h2>
+    <h2>Панель администратора</h2>
     
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+        {% for course in courses %}
+        <div class="col">
+            <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Статистика</h5>
-                    <p>Студентов: {{ students.count }}</p>
-                    <p>Преподавателей: {{ teachers.count }}</p>
-                    <p>Курсов: {{ courses.count }}</p>
+                    <h5 class="card-title">{{ course.title }}</h5>
+                    <p class="card-text">{{ course.description|truncatewords:15 }}</p>
+                    <span class="badge bg-{% if course.is_active %}success{% else %}secondary{% endif %}">
+                        {% if course.is_active %}Активен{% else %}Не активен{% endif %}
+                    </span>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'course_detail' course.id %}" class="btn btn-primary btn-sm">
+                        Просмотреть
+                    </a>
+                    <a href="{% url 'course_edit' course.id %}" class="btn btn-outline-secondary btn-sm">
+                        Редактировать
+                    </a>
                 </div>
             </div>
         </div>
-        
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Последние активности</h5>
-                    <!-- Здесь будет таблица с активностями -->
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
