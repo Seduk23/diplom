@@ -1,0 +1,24 @@
+{% extends 'courses/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ course.title }}</h1>
+    <p class="lead">{{ course.description }}</p>
+    
+    <div class="list-group mt-4">
+        {% for lesson in lessons %}
+        <div class="list-group-item">
+            <h5>Урок {{ forloop.counter }}: {{ lesson.title }}</h5>
+            <p>{{ lesson.content|truncatewords:30 }}</p>
+            <a href="#" class="btn btn-sm btn-outline-primary">Начать урок</a>
+        </div>
+        {% empty %}
+        <div class="alert alert-info">
+            В этом курсе пока нет уроков.
+        </div>
+        {% endfor %}
+    </div>
+    
+    <a href="{% url 'home' %}" class="btn btn-secondary mt-3">Назад к курсам</a>
+</div>
+{% endblock %}

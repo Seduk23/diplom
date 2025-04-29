@@ -1,0 +1,29 @@
+{% extends 'courses/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Доступные курсы</h1>
+    
+    {% if courses %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for course in courses %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ course.title }}</h5>
+                    <p class="card-text">{{ course.description|truncatechars:100 }}</p>
+                    <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">
+                        Подробнее
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info mt-4">
+        Пока нет доступных курсов. Зайдите позже!
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

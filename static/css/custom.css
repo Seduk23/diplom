@@ -1,0 +1,42 @@
+/* Стили для бейджей ролей */
+.badge-role {
+    font-size: 0.75rem;
+    vertical-align: middle;
+}
+
+.badge-teacher {
+    background-color: #6f42c1; /* Фиолетовый */
+}
+
+.badge-admin {
+    background-color: #dc3545; /* Красный */
+}
+
+.badge-student {
+    background-color: #20c997; /* Зеленый */
+}
+
+/* Адаптация навигации для мобильных */
+@media (max-width: 768px) {
+    .navbar-nav {
+        padding-top: 10px;
+    }
+    
+    .nav-item {
+        margin-bottom: 5px;
+    }
+}
+:root {
+    --teacher-color: #6f42c1;
+    --admin-color: #dc3545;
+    --student-color: #20c997;
+}
+
+.badge-teacher { background-color: var(--teacher-color); }
+.badge-admin { background-color: var(--admin-color); }
+.badge-student { background-color: var(--student-color); }
+
+.nav-link:hover {
+    transform: translateX(3px);
+    transition: transform 0.2s ease;
+}
