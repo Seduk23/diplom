@@ -17,9 +17,13 @@ urlpatterns = [
     path('student/', views.student_dashboard, name='student_dashboard'),
     path('admin/', views.admin_dashboard, name='admin_dashboard'),
     path('course/<int:course_id>/', views.course_detail, name='course_detail'),
+    path('lesson/<int:lesson_id>/', views.lesson_detail, name='lesson_detail'),
     path('teacher/', views.teacher_dashboard, name='teacher_dashboard'),
     # Защищенные URL для преподавателей
     path('course/create/', teacher_required(views.create_course), name='create_course'),
     path('course/<int:course_id>/edit/', teacher_required(views.edit_course), name='edit_course'),
     path('course/<int:course_id>/lessons/', teacher_required(views.manage_lessons), name='manage_lessons'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

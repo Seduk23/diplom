@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post" action="{% url 'submit_test' test_id=test.id %}">
+    {% csrf_token %}
+    <h1>{{ test.title }}</h1>
+    <p>{{ test.description }}</p>
+    
+    {% for question in test.questions.all %}
+    <div class="question">
+        <h3>{{ forloop.counter }}. {{ question.text }}</h3>
+        
+        {% if question.question_type == 'text' %}
+        <textarea name="question_{{ question.id }}" required></textarea>
+        {% else %}
+        <ul class="answers">
+            {% for answer in question.answers.all %}
+            <li>
+                {% if question.question_type == 'single' %}
+                <input type="radio" name="question_{{ question.id }}" value="{{ answer.id }}" required>
+                {% else %}
+                <input type="checkbox" name="question_{{ question.id }}" value="{{ answer.id }}">
+                {% endif %}
+                {{ answer.text }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    
+    <button type="submit" class="btn btn-primary">Отправить ответы</button>
+</form>
+{% endblock %}

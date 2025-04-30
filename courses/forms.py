@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from .models import Course, Lesson
+from courses import models
 
 User = get_user_model()
 class StudentSignUpForm(UserCreationForm):

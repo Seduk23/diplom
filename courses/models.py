@@ -27,43 +27,68 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
+# models.py
 class Lesson(models.Model):
-    course = models.ForeignKey(
-        Course,
-        on_delete=models.CASCADE,
-        verbose_name="Курс",
-        related_name='lessons'
-    )
-    title = models.CharField("Название", max_length=200)
-    content = models.TextField("Содержание")
-    order = models.PositiveIntegerField("Порядок", default=0)
-    is_published = models.BooleanField("Опубликован", default=False)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
+    title = models.CharField(max_length=200)
+    content = models.TextField(blank=True)  # Основной текст урока
+    video_url = models.URLField(blank=True)  # Ссылка на видео
+    image = models.ImageField(upload_to='lesson_images/', blank=True)  # Изображение для урока
+    order = models.PositiveIntegerField(default=0)  # Порядок урока в курсе
+    created_at = models.DateTimeField(default=timezone.now)
+    is_published = models.BooleanField(default=False, verbose_name="Опубликован")
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['order']
-        verbose_name = "Урок"
-        verbose_name_plural = "Уроки"
 
     def __str__(self):
-        return f"{self.course.title} - {self.title}"
+        return self.title
     
+class Test(models.Model):
+    lesson = models.OneToOneField(Lesson, on_delete=models.CASCADE, related_name='test')
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    passing_score = models.PositiveIntegerField(default=70)  # Проходной балл в %
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"Тест к уроку: {self.lesson.title}"    
+    
+# models.py
 class Question(models.Model):
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='questions')
-    text = models.TextField("Текст вопроса")
-    question_type = models.CharField("Тип вопроса", max_length=20, choices=[
-        ('single', 'Один вариант'),
-        ('multiple', 'Несколько вариантов'),
-        ('text', 'Текстовый ответ')
-    ])
-    order = models.PositiveIntegerField("Порядок", default=0)
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='questions')
+    text = models.TextField()
+    question_type = models.CharField(
+        max_length=20,
+        choices=(
+            ('single', 'Один правильный ответ'),
+            ('multiple', 'Несколько правильных ответов'),
+            ('text', 'Текстовый ответ'),
+        ),
+        default='single'
+    )
+    order = models.PositiveIntegerField(default=0)
+    points = models.PositiveIntegerField(default=1)  # Баллы за вопрос
 
     class Meta:
         ordering = ['order']
 
+    def __str__(self):
+        return f"{self.text[:50]}..."
+
+# models.py
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
-    text = models.TextField("Текст ответа")
-    is_correct = models.BooleanField("Правильный ответ", default=False)
+    text = models.TextField()
+    is_correct = models.BooleanField(default=False)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"{self.text[:50]}... ({'верный' if self.is_correct else 'неверный'})"
 
 class TestResult(models.Model):
     student = models.ForeignKey(
@@ -86,3 +111,4 @@ class TestResult(models.Model):
 
     def __str__(self):
         return f"{self.student.username} - {self.lesson.title} ({self.score}%)"
+    

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="lesson-detail">
+    <h1>{{ lesson.title }}</h1>
+    
+    <div class="lesson-content">
+        {% if lesson.video_url %}
+        <div class="video-wrapper">
+            <iframe src="{{ lesson.video_url }}" frameborder="0" allowfullscreen></iframe>
+        </div>
+        {% endif %}
+        
+        <div class="text-content">
+            {{ lesson.content|safe }}
+        </div>
+    </div>
+    
+    {% if next_lesson %}
+    <a href="{% url 'lesson_detail' next_lesson.id %}" class="btn next-lesson">
+        Следующий урок: {{ next_lesson.title }}
+    </a>
+    {% endif %}
+</div>
+{% endblock %}

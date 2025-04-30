@@ -58,7 +58,7 @@ ROOT_URLCONF = 'js_learning.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,7 +137,9 @@ LESSON_PASSING_SCORE = 80
 # Количество попыток прохождения теста
 MAX_TEST_ATTEMPTS = 3
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'your_app/static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'  # URL для медиафайлов
 MEDIA_ROOT = BASE_DIR / 'media'  # Папка для загруженных файлов
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

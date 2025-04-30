@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Course, Lesson, Question, TestResult
+from .models import Course, Test, Lesson, Question, TestResult
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from .forms import LessonForm, StudentSignUpForm, TeacherSignUpForm
@@ -221,3 +221,28 @@ def calculate_score(answers, questions):
                     correct += 1
     
     return int((correct / len(questions)) * 100 if questions else 0)
+
+@login_required
+def lesson_detail(request, lesson_id):
+    """Детальная страница урока"""
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    next_lesson = Lesson.objects.filter(
+        course=lesson.course, 
+        order__gt=lesson.order
+    ).order_by('order').first()
+    
+    return render(request, 'courses/lesson_detail.html', {
+        'lesson': lesson,
+        'next_lesson': next_lesson
+    })
+
+@login_required
+def test_view(request, lesson_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    test = get_object_or_404(Test, lesson=lesson)
+    return render(request, 'courses/test_view.html', {'test': test})
+
+@login_required
+def submit_test(request, test_id):
+    # Здесь будет логика проверки ответов и сохранения результатов
+    pass
